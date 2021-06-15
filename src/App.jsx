@@ -4,11 +4,7 @@ import {
   Link,
 } from 'react-router-dom';
 
-import HomePage from './HomePage';
-import AboutPage from './AboutPage';
-import RestaurantsPage from './RestaurantsPage';
-import RestaurantPage from './RestaurantPage';
-import NotFoundPage from './NotFoundPage';
+import { HomePage, AboutPage, RestaurantsPage, RestaurantPage, NotFoundPage } from './pages';
 
 export default function App() {
   return (
