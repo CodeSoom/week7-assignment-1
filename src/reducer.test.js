@@ -7,6 +7,9 @@ import {
   setRestaurant,
   selectRegion,
   selectCategory,
+  changeLoginField,
+  setAccessToken,
+  changeReviewField,
 } from './actions';
 
 describe('reducer', () => {
@@ -18,6 +21,12 @@ describe('reducer', () => {
       restaurant: null,
       selectedRegion: null,
       selectedCategory: null,
+      loginFields: {},
+      accessToken: '',
+      reviewFields: {
+        score: '',
+        description: '',
+      },
     };
 
     it('returns initialState', () => {
@@ -124,5 +133,48 @@ describe('reducer', () => {
         name: '한식',
       });
     });
+  });
+
+  describe('changeLoginField', () => {
+    it('changes login field', () => {
+      const initialState = {
+        loginFields: {},
+      };
+
+      const state = reducer(
+        initialState,
+        changeLoginField({ name: 'email', value: 'test' }),
+      );
+
+      expect(state.loginFields).toEqual({
+        email: 'test',
+      });
+    });
+  });
+
+  describe('setAccessToken', () => {
+    const initialState = {
+      accessToken: '',
+    };
+
+    const state = reducer(initialState, setAccessToken('TOKEN'));
+
+    expect(state.accessToken).toBe('TOKEN');
+  });
+
+  describe('changeReviewField', () => {
+    const initialState = {
+      reviewFields: {
+        score: '0',
+        description: '',
+      },
+    };
+
+    const state = reducer(
+      initialState,
+      changeReviewField({ name: 'score', value: '5' }),
+    );
+
+    expect(state.reviewFields.score).toBe('5');
   });
 });

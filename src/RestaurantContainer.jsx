@@ -6,9 +6,12 @@ import RestaurantDetail from './RestaurantDetail';
 
 import {
   loadRestaurant,
+  changeReviewField,
 } from './actions';
 
 import { get } from './utils';
+
+import ReviewForm from './ReviewForm';
 
 export default function RestaurantContainer({ restaurantId }) {
   const dispatch = useDispatch();
@@ -19,6 +22,10 @@ export default function RestaurantContainer({ restaurantId }) {
 
   const restaurant = useSelector(get('restaurant'));
 
+  function handleChange({ name, value }) {
+    dispatch(changeReviewField({ name, value }));
+  }
+
   if (!restaurant) {
     return (
       <p>Loading...</p>
@@ -28,6 +35,7 @@ export default function RestaurantContainer({ restaurantId }) {
   return (
     <>
       <RestaurantDetail restaurant={restaurant} />
+      <ReviewForm onChange={handleChange} />
     </>
   );
 }

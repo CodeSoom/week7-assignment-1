@@ -31,6 +31,16 @@ describe('RestaurantPage', () => {
 
       expect(container).toHaveTextContent('마법사주방');
     });
+
+    it('renders review write form', () => {
+      const params = { id: '1' };
+
+      const { getByLabelText } = render(
+        <RestaurantPage params={params} />,
+      );
+
+      expect(getByLabelText('평점')).not.toBeNull();
+    });
   });
 
   context('without params props', () => {
