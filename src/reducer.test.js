@@ -1,4 +1,4 @@
-import reducer from './reducer';
+import reducer, { initialReviewFields } from './reducer';
 
 import {
   setRegions,
@@ -7,6 +7,12 @@ import {
   setRestaurant,
   selectRegion,
   selectCategory,
+  changeLoginField,
+  setAccessToken,
+  changeReviewField,
+  logout,
+  setReviews,
+  clearReviewFields,
 } from './actions';
 
 describe('reducer', () => {
@@ -18,6 +24,15 @@ describe('reducer', () => {
       restaurant: null,
       selectedRegion: null,
       selectedCategory: null,
+      loginFields: {
+        email: '',
+        password: '',
+      },
+      reviewFields: {
+        score: '',
+        description: '',
+      },
+      accessToken: null,
     };
 
     it('returns initialState', () => {
@@ -123,6 +138,125 @@ describe('reducer', () => {
         id: 1,
         name: '한식',
       });
+    });
+  });
+
+  describe('changeLoginField', () => {
+    it('changes email and keeps remaining value', () => {
+      const initialState = {
+        loginFields: {
+          email: '',
+          password: '',
+        },
+      };
+
+      const state = reducer(initialState, changeLoginField({
+        name: 'email',
+        value: 'test@test.com',
+      }));
+
+      const { loginFields: { email, password } } = state;
+
+      expect(email).toBe('test@test.com');
+      expect(password).toBe('');
+    });
+  });
+
+  describe('setAccessToken', () => {
+    it('changes access token', () => {
+      const initialState = {
+        accessToken: null,
+      };
+
+      const { accessToken } = reducer(initialState, setAccessToken('aabbccdd'));
+
+      expect(accessToken).toBe('aabbccdd');
+    });
+  });
+
+  describe('setReviews', () => {
+    it('changes reviews of the current restaurant', () => {
+      const reviews = [
+        {
+          id: 1,
+          name: '테스터',
+          score: 5,
+          description: '훌륭하다 훌륭하다 지구인놈들',
+        },
+        {
+          id: 2,
+          name: '동우',
+          score: 1,
+          description: '배탈남',
+        },
+      ];
+
+      const initialState = {
+        restaurant: {
+          reviews: [],
+        },
+      };
+
+      const state = reducer(initialState, setReviews(reviews));
+
+      // 자세하게 하고 싶으면 toEqual같은 것들도 사용가능
+      expect(state.restaurant.reviews).toHaveLength(reviews.length);
+    });
+  });
+
+  describe('changeReviewField', () => {
+    it('changes score and keeps remaining value', () => {
+      const initialState = {
+        reviewFields: {
+          score: '',
+          description: '',
+        },
+      };
+
+      const state = reducer(initialState, changeReviewField({
+        name: 'score',
+        value: '5',
+      }));
+
+      const { reviewFields: { score, description } } = state;
+
+      expect(score).toBe('5');
+
+      expect(description).toBe('');
+    });
+  });
+
+  describe('logout', () => {
+    it('changes access token and keeps remaining value', () => {
+      const initialState = {
+        accessToken: 'ACCESS_TOKEN',
+        selectedCategory: null,
+      };
+
+      const { accessToken, selectedCategory } = reducer(initialState, logout());
+
+      expect(accessToken).toBe('');
+
+      expect(selectedCategory).toBeNull();
+    });
+  });
+
+  describe('clearReviewFields', () => {
+    it('clears fields of review and keeps remaining value', () => {
+      const initialState = {
+        reviewFields: {
+          ...initialReviewFields,
+        },
+        selectedCategory: null,
+      };
+
+      const { reviewFields, selectedCategory } = reducer(initialState, clearReviewFields());
+
+      Object.keys(reviewFields).forEach((reviewField) => {
+        expect(reviewFields[reviewField]).toBe('');
+      });
+
+      expect(selectedCategory).toBeNull();
     });
   });
 });

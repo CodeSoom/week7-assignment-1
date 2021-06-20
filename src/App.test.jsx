@@ -1,14 +1,16 @@
 import {
   MemoryRouter,
 } from 'react-router-dom';
-
 import { render } from '@testing-library/react';
-
 import { useDispatch, useSelector } from 'react-redux';
 
 import App from './App';
 
+import { loadItemToLocalStorage } from './services/storage';
+import { setAccessToken } from './actions';
+
 jest.mock('react-redux');
+jest.mock('./services/storage');
 
 describe('App', () => {
   const dispatch = jest.fn();
@@ -24,7 +26,19 @@ describe('App', () => {
       ],
       categories: [],
       restaurants: [],
-      restaurant: { id: 1, name: '마녀주방' },
+      restaurant: {
+        id: 1,
+        name: '마녀주방',
+        reviews: [],
+      },
+      loginFields: {
+        email: '',
+        password: '',
+      },
+      reviewFields: {
+        score: '',
+        description: '',
+      },
     }));
   });
 
@@ -52,6 +66,14 @@ describe('App', () => {
     });
   });
 
+  context('with path /login', () => {
+    it('renders the login page', () => {
+      const { container } = renderApp({ path: '/login' });
+
+      expect(container).toHaveTextContent('Log In');
+    });
+  });
+
   context('with path /restaurants', () => {
     it('renders the restaurants page', () => {
       const { container } = renderApp({ path: '/restaurants' });
@@ -73,6 +95,32 @@ describe('App', () => {
       const { container } = renderApp({ path: '/xxx' });
 
       expect(container).toHaveTextContent('Not Found');
+    });
+  });
+
+  context('when logged in', () => {
+    const accessToken = 'ACCESS_TOKEN';
+
+    beforeEach(() => {
+      loadItemToLocalStorage.mockImplementation(() => accessToken);
+    });
+
+    it('calls dispatch with "setAccessToken" action', () => {
+      renderApp({ path: '/' });
+
+      expect(dispatch).toBeCalledWith(setAccessToken(accessToken));
+    });
+  });
+
+  context('when logged out', () => {
+    beforeEach(() => {
+      loadItemToLocalStorage.mockImplementation(() => null);
+    });
+
+    it("doesn't call dispatch", () => {
+      renderApp({ path: '/' });
+
+      expect(dispatch).not.toBeCalled();
     });
   });
 });

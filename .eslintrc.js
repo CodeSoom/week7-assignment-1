@@ -17,6 +17,7 @@ module.exports = {
   },
   plugins: [
     'react',
+    'import',
   ],
   globals: {
     Atomics: 'readonly',
@@ -53,5 +54,22 @@ module.exports = {
 
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
+
+    'import/order': [
+      'error',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'index',
+          'internal',
+          ['parent', 'sibling'],
+          'object',
+          'type',
+        ],
+        'newlines-between': 'always-and-inside-groups',
+        warnOnUnassignedImports: true,
+      },
+    ],
   },
 };

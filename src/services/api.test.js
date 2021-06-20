@@ -3,6 +3,8 @@ import {
   fetchCategories,
   fetchRestaurants,
   fetchRestaurant,
+  postLogin,
+  postReview,
 } from './api';
 
 import REGIONS from '../../fixtures/regions';
@@ -65,6 +67,30 @@ describe('api', () => {
       const restaurant = await fetchRestaurant({ restaurantId: 1 });
 
       expect(restaurant).toEqual(RESTAURANT);
+    });
+  });
+
+  describe('postLogin', () => {
+    beforeEach(() => {
+      mockFetch({ accessToken: 'aabbccdd' });
+    });
+
+    it('returns accessToken', async () => {
+      const accessToken = await postLogin({ email: 'test@naver.com', password: 'test' });
+
+      expect(accessToken).toBe('aabbccdd');
+    });
+  });
+
+  describe('postReview', () => {
+    beforeEach(() => {
+      mockFetch(undefined);
+    });
+
+    it('returns accessToken', async () => {
+      const response = await postReview({ score: '0', description: '드릅게 맛없음' });
+
+      expect(response).toBe(undefined);
     });
   });
 });

@@ -4,7 +4,6 @@ import {
   selectCategory,
   loadRestaurants,
 } from './actions';
-
 import { get } from './utils';
 
 export default function CategoriesContainer() {
